@@ -87,23 +87,21 @@ function App() {
   // Show the Connect screen if no username is set
   if (!username) {
     return (
-      <main className="h-screen w-full bg-gray-950 flex gap-4 p-4 items-center justify-center">
-        <div className="flex flex-col gap-4">
+      <main className="connect-container">
+        <div className="glass-panel connect-card">
+          <h1 className="connect-title">CodeSync Pro</h1>
           <input
             type="text"
             placeholder="Enter your username"
-            className="p-2 rounded-lg bg-gray-800 text-white"
+            className="connect-input"
             value={usernameInput}
             onChange={(e) => setUsernameInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleJoin();
             }}
           />
-          <button
-            className="p-2 rounded-lg bg-amber-50 text-gray-950 font-bold"
-            onClick={handleJoin}
-          >
-            Connect
+          <button className="btn-primary" onClick={handleJoin}>
+            Join Workspace
           </button>
         </div>
       </main>
@@ -112,39 +110,45 @@ function App() {
 
   // Show the Editor once a username is provided
   return (
-    <main className="h-screen w-full bg-gray-950 flex gap-4 p-2">
-      <aside className="h-full w-1/4 bg-amber-50 rounded-lg overflow-y-auto p-4">
-        <h2 className="font-bold text-xl mb-4 text-gray-950">Room details</h2>
-        <div className="flex flex-col gap-2">
+    <main className="app-container">
+      <aside className="glass-panel sidebar">
+        <h2 className="sidebar-header">Collaborators</h2>
+        <div className="users-list">
           {users.map((user, idx) => (
-            <div key={idx} className="flex items-center gap-2 text-gray-800">
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <span className="font-medium">
+            <div key={idx} className="user-chip">
+              <div className="user-dot"></div>
+              <span className={`user-name ${user.name === username ? 'self' : ''}`}>
                 {user.name} {user.name === username ? "(You)" : ""}
               </span>
             </div>
           ))}
-          {/* Fallback for when users array might be empty momentarily */}
           {users.length === 0 && (
-            <div className="flex items-center gap-2 text-gray-800">
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <span className="font-medium">{username} (You)</span>
+            <div className="user-chip">
+              <div className="user-dot"></div>
+              <span className="user-name self">{username} (You)</span>
             </div>
           )}
         </div>
       </aside>
-      <section
-        className="h-full w-3/4 bg-neutral-800 rounded-lg overflow-hidden relative"
-      >
-        <Editor
-          height="100%"
-          defaultLanguage="javascript"
-          theme="vs-dark"
-          onMount={handleEditorDidMount}
-          options={{
-            minimap: { enabled: false }
-          }}
-        />
+      <section className="glass-panel editor-container">
+        <div className="editor-header">
+          <div className="mac-btn mac-close"></div>
+          <div className="mac-btn mac-min"></div>
+          <div className="mac-btn mac-max"></div>
+          <span className="editor-title">index.js — Shared Workspace</span>
+        </div>
+        <div className="editor-wrapper">
+          <Editor
+            height="100%"
+            defaultLanguage="javascript"
+            theme="vs-dark"
+            onMount={handleEditorDidMount}
+            options={{
+              minimap: { enabled: false },
+              padding: { top: 16 }
+            }}
+          />
+        </div>
       </section>
     </main>
   );
