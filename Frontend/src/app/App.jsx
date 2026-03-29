@@ -30,6 +30,27 @@ function App() {
     }
   };
 
+  const handleDisconnect = () => {
+    if (bindingRef.current) bindingRef.current.destroy();
+    if (providerRef.current) providerRef.current.destroy();
+    if (ydocRef.current) ydocRef.current.destroy();
+    
+    setUsername("");
+    setUsernameInput("");
+    setUsers([]);
+
+    const url = new URL(window.location);
+    url.searchParams.delete("username");
+    window.history.replaceState({}, '', url);
+  };
+
+  const handleInvite = () => {
+    const url = new URL(window.location);
+    url.searchParams.delete("username");
+    navigator.clipboard.writeText(url.toString());
+    alert("Invite link copied to clipboard!");
+  };
+
   const handleEditorDidMount = (editor, monaco) => {
     // 1. Create the Yjs document
     const ydoc = new Y.Doc();
@@ -128,6 +149,14 @@ function App() {
               <span className="user-name self">{username} (You)</span>
             </div>
           )}
+        </div>
+        <div className="sidebar-actions" style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <button className="btn-secondary" onClick={handleInvite}>
+            Copy Invite Link
+          </button>
+          <button className="btn-danger" onClick={handleDisconnect}>
+            Leave Room
+          </button>
         </div>
       </aside>
       <section className="glass-panel editor-container">
