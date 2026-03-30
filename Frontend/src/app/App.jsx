@@ -61,7 +61,7 @@ function App() {
 
     // 3. Connect to the setup YSocketIO backend server (from earlier)
     const provider = new SocketIOProvider(
-      'http://localhost:3000', // Must match your backend
+      window.location.origin, // Use the current origin
       'monaco-room',           // Room ID for this file
       ydoc,
       { autoConnect: true }
